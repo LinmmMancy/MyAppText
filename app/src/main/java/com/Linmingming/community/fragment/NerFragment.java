@@ -2,6 +2,7 @@ package com.Linmingming.community.fragment;
 
 import android.graphics.Color;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.ListView;
@@ -10,6 +11,7 @@ import com.Linmingming.R;
 import com.Linmingming.base.BaseFragment;
 import com.Linmingming.community.adapter.NewPostListViewAdapter;
 import com.Linmingming.community.bean.NewPostBean;
+import com.Linmingming.utils.CacheUtils;
 import com.Linmingming.utils.Constants;
 import com.alibaba.fastjson.JSON;
 import com.zhy.http.okhttp.OkHttpUtils;
@@ -33,6 +35,8 @@ public class NerFragment extends BaseFragment {
 
     private NewPostListViewAdapter adapter;
 
+
+
     @Override
     public View initView() {
 
@@ -45,6 +49,11 @@ public class NerFragment extends BaseFragment {
     @Override
     public void initData() {
         super.initData();
+        String savaJson = CacheUtils.getString(context, Constants.NEW_POST_URL);
+
+        if (!TextUtils.isEmpty(savaJson)) {
+            processData(savaJson);
+        }
 
         getDataFromNet();
         swiperefreshlayout.setDistanceToTriggerSync(100);
@@ -77,6 +86,7 @@ public class NerFragment extends BaseFragment {
                     @Override
                     public void onResponse(String response, int id) {
                         Log.e("TAG", "hotfragment联网成功==");
+                        CacheUtils.putString(context, Constants.NEW_POST_URL, response);
                         processData(response);
 
                         swiperefreshlayout.setRefreshing(false);
@@ -85,6 +95,7 @@ public class NerFragment extends BaseFragment {
 
 
                 });
+
 
     }
 

@@ -4,6 +4,7 @@ import android.graphics.Color;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -13,7 +14,7 @@ import com.Linmingming.R;
 import com.Linmingming.base.BaseFragment;
 import com.Linmingming.home.adapter.HomeAdapter;
 import com.Linmingming.home.bean.HomeBean;
-import com.Linmingming.utils.Constants;
+import com.Linmingming.utils.CacheUtils;
 import com.alibaba.fastjson.JSON;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.StringCallback;
@@ -21,6 +22,8 @@ import com.zhy.http.okhttp.callback.StringCallback;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import okhttp3.Call;
+
+import static com.Linmingming.utils.Constants.HOME_URL;
 
 
 /**
@@ -45,6 +48,7 @@ public class HomeFragment extends BaseFragment {
 
     private HomeAdapter adapter;
 
+
     @Override
     public View initView() {
 
@@ -56,6 +60,11 @@ public class HomeFragment extends BaseFragment {
 
     @Override
     public void initData() {
+        String savaJson = CacheUtils.getString(context, HOME_URL);
+        if (!TextUtils.isEmpty(savaJson)) {
+            processData(savaJson);
+        }
+
         super.initData();
         getDataFromNet();
         Log.e("TAG", "initData: 111111");
@@ -68,6 +77,8 @@ public class HomeFragment extends BaseFragment {
                 getDataFromNet();
             }
         });
+
+
     }
 
 
@@ -77,7 +88,7 @@ public class HomeFragment extends BaseFragment {
         OkHttpUtils
                 .get()
                 //联网地址
-                .url(Constants.HOME_URL)
+                .url(HOME_URL)
                 .id(100)//http,
                 .build()
                 .execute(new StringCallback() {
@@ -89,6 +100,7 @@ public class HomeFragment extends BaseFragment {
                     @Override
                     public void onResponse(String response, int id) {
                         Log.e("TAG", "联网成功==");
+                        CacheUtils.putString(context, HOME_URL, response);
                         processData(response);
                         swiperefreshlayout.setRefreshing(false);
 

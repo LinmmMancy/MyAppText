@@ -22,7 +22,9 @@ public class WelcomeActivity extends AppCompatActivity {
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
+
                 startMainActivity();
+
             }
         }, 2000);
     }
@@ -30,21 +32,31 @@ public class WelcomeActivity extends AppCompatActivity {
     private void startMainActivity() {
         startActivity(new Intent(this, MainActivity.class));
 
+
         finish();
     }
 
+
     @Override
     public boolean onTouchEvent(MotionEvent event) {
+
+        // 立即进入
         if (event.getAction() == MotionEvent.ACTION_DOWN) {
             startMainActivity();
+
+            return true;
         }
+
+
         return super.onTouchEvent(event);
 
     }
 
     @Override
     protected void onDestroy() {
+
         super.onDestroy();
         handler.removeCallbacksAndMessages(null);
+
     }
 }

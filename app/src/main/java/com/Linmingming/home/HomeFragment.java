@@ -1,11 +1,23 @@
 package com.Linmingming.home;
 
-import android.graphics.Color;
-import android.view.Gravity;
+import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.Linmingming.R;
 import com.Linmingming.base.BaseFragment;
+import com.Linmingming.home.bean.HomeBean;
+import com.Linmingming.utils.Constants;
+import com.alibaba.fastjson.JSON;
+import com.zhy.http.okhttp.OkHttpUtils;
+import com.zhy.http.okhttp.callback.StringCallback;
+
+import butterknife.ButterKnife;
+import butterknife.InjectView;
+import okhttp3.Call;
+
 
 /**
  * Created by Mancy on 2017/3/9.
@@ -13,24 +25,74 @@ import com.Linmingming.base.BaseFragment;
 
 public class HomeFragment extends BaseFragment {
 
+    @InjectView(R.id.ll_main_scan)
+    LinearLayout llMainScan;
+    @InjectView(R.id.tv_search_home)
+    TextView tvSearchHome;
+    @InjectView(R.id.tv_message_home)
+    TextView tvMessageHome;
+    @InjectView(R.id.rv_home)
+    RecyclerView rvHome;
+
     private TextView textView;
 
     @Override
     public View initView() {
-        textView = new TextView(context);
 
-        textView.setTextColor(Color.RED);
+        View view = View.inflate(context, R.layout.fragment_home, null);
 
-        textView.setTextSize(30);
-
-        textView.setGravity(Gravity.CENTER);
-        return textView;
+        ButterKnife.inject(this, view);
+        return view;
     }
 
     @Override
     public void initData() {
         super.initData();
-        textView.setText("我是home");
+        Log.e("TAG", "initData: 111111");
 
+        getDataFromNet();
+
+    }
+
+    private void getDataFromNet() {
+
+
+        OkHttpUtils
+                .get()
+                //联网地址
+                .url(Constants.HOME_URL)
+                .id(100)//http,
+                .build()
+                .execute(new StringCallback() {
+                    @Override
+                    public void onError(Call call, Exception e, int id) {
+                        Log.e("TAG", "联网失败==" + e.getMessage());
+                    }
+
+                    @Override
+                    public void onResponse(String response, int id) {
+                        Log.e("TAG", "联网成功==");
+                        processData(response);
+
+                    }
+
+
+                });
+    }
+
+    private void processData(String json) {
+
+        HomeBean homeBean = JSON.parseObject(json, HomeBean.class);
+
+        Log.e("TAG", "processData: " + homeBean.getResult().getHot_info().get(0).getName());
+
+
+    }
+
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        ButterKnife.reset(this);
     }
 }

@@ -25,9 +25,6 @@ import butterknife.InjectView;
 public class ConmunityFragment extends BaseFragment {
 
 
-    @InjectView(R.id.ib_community_icon)
-    ImageButton ibCommunityIcon;
-    @InjectView(R.id.ib_community_message)
     ImageButton ibCommunityMessage;
     @InjectView(R.id.tablayout)
     TabLayout tablayout;
@@ -76,12 +73,9 @@ public class ConmunityFragment extends BaseFragment {
 
         fragments.add(new HotFragment());
         fragments.add(new NerFragment());
+
         fragments.add(new HotFragment());
         fragments.add(new NerFragment());
-        fragments.add(new HotFragment());
-        fragments.add(new NerFragment());
-
-
 
 
     }

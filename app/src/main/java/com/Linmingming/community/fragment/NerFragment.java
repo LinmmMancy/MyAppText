@@ -1,5 +1,7 @@
 package com.Linmingming.community.fragment;
 
+import android.graphics.Color;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
 import android.view.View;
 import android.widget.ListView;
@@ -26,6 +28,8 @@ import okhttp3.Call;
 public class NerFragment extends BaseFragment {
     @InjectView(R.id.lv_new_post)
     ListView lvNewPost;
+    @InjectView(R.id.swiperefreshlayout)
+    SwipeRefreshLayout swiperefreshlayout;
 
     private NewPostListViewAdapter adapter;
 
@@ -43,8 +47,18 @@ public class NerFragment extends BaseFragment {
         super.initData();
 
         getDataFromNet();
+        swiperefreshlayout.setDistanceToTriggerSync(100);
+        swiperefreshlayout.setColorSchemeColors(Color.GREEN, Color.RED);
+        swiperefreshlayout.setProgressBackgroundColorSchemeResource(android.R.color.holo_blue_bright);
+        swiperefreshlayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                getDataFromNet();
+            }
+        });
 
     }
+
 
     private void getDataFromNet() {
 
@@ -64,6 +78,8 @@ public class NerFragment extends BaseFragment {
                     public void onResponse(String response, int id) {
                         Log.e("TAG", "hotfragment联网成功==");
                         processData(response);
+
+                        swiperefreshlayout.setRefreshing(false);
 
                     }
 
@@ -91,4 +107,6 @@ public class NerFragment extends BaseFragment {
         super.onDestroyView();
         ButterKnife.reset(this);
     }
+
+
 }

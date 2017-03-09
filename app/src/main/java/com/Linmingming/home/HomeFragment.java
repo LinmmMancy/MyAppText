@@ -1,5 +1,7 @@
 package com.Linmingming.home;
 
+import android.graphics.Color;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -35,6 +37,9 @@ public class HomeFragment extends BaseFragment {
     TextView tvMessageHome;
     @InjectView(R.id.rv_home)
     RecyclerView rvHome;
+    @InjectView(R.id.swiperefreshlayout)
+    SwipeRefreshLayout swiperefreshlayout;
+
 
     private TextView textView;
 
@@ -52,11 +57,19 @@ public class HomeFragment extends BaseFragment {
     @Override
     public void initData() {
         super.initData();
-        Log.e("TAG", "initData: 111111");
-
         getDataFromNet();
-
+        Log.e("TAG", "initData: 111111");
+        swiperefreshlayout.setDistanceToTriggerSync(100);
+        swiperefreshlayout.setColorSchemeColors(Color.GREEN, Color.RED);
+        swiperefreshlayout.setProgressBackgroundColorSchemeResource(android.R.color.holo_blue_bright);
+        swiperefreshlayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                getDataFromNet();
+            }
+        });
     }
+
 
     private void getDataFromNet() {
 
@@ -77,6 +90,8 @@ public class HomeFragment extends BaseFragment {
                     public void onResponse(String response, int id) {
                         Log.e("TAG", "联网成功==");
                         processData(response);
+                        swiperefreshlayout.setRefreshing(false);
+
 
                     }
 
@@ -105,4 +120,6 @@ public class HomeFragment extends BaseFragment {
         super.onDestroyView();
         ButterKnife.reset(this);
     }
+
+
 }

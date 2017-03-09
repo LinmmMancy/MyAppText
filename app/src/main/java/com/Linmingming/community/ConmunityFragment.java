@@ -1,7 +1,5 @@
 package com.Linmingming.community;
 
-import android.graphics.Color;
-import android.view.Gravity;
 import android.view.View;
 import android.widget.TextView;
 
@@ -16,15 +14,6 @@ public class ConmunityFragment extends BaseFragment {
 
     @Override
     public View initView() {
-
-        textView = new TextView(context);
-
-        textView.setTextColor(Color.RED);
-
-        textView.setTextSize(30);
-
-        textView.setGravity(Gravity.CENTER);
-
         return textView;
 
     }

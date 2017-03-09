@@ -1,5 +1,6 @@
 package com.Linmingming.home;
 
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
@@ -8,6 +9,7 @@ import android.widget.TextView;
 
 import com.Linmingming.R;
 import com.Linmingming.base.BaseFragment;
+import com.Linmingming.home.adapter.HomeAdapter;
 import com.Linmingming.home.bean.HomeBean;
 import com.Linmingming.utils.Constants;
 import com.alibaba.fastjson.JSON;
@@ -35,6 +37,8 @@ public class HomeFragment extends BaseFragment {
     RecyclerView rvHome;
 
     private TextView textView;
+
+    private HomeAdapter adapter;
 
     @Override
     public View initView() {
@@ -85,6 +89,12 @@ public class HomeFragment extends BaseFragment {
         HomeBean homeBean = JSON.parseObject(json, HomeBean.class);
 
         Log.e("TAG", "processData: " + homeBean.getResult().getHot_info().get(0).getName());
+
+        adapter = new HomeAdapter(context, homeBean.getResult());
+
+        rvHome.setAdapter(adapter);
+        GridLayoutManager manager = new GridLayoutManager(context, 1);
+        rvHome.setLayoutManager(manager);
 
 
     }
